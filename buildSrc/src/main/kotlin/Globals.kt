@@ -7,10 +7,10 @@ object Globals {
 
   val javaVersion = JavaVersion.VERSION_1_8
 
-  const val scalaVersion = "2.13.0" // "2.12.8"
-  const val scalaMajorVersion = "2.13" // "2.12"
+  const val scalaVersion = "2.13.0"
+  const val scalaMajorVersion = "2.13"
   const val akkaStreamVersion = "2.5.23"
-  const val gradleWrapperVersion = "5.5"
+  const val gradleWrapperVersion = "5.6-rc-1"
   const val junitJupiterVersion = "5.5.1"
   const val reactiveStreamsVersion = "1.0.2"
   const val springBootVersion = "2.2.0.M4"
