@@ -59,22 +59,6 @@ jobs:
   include:
     - stage: test
       jdk: openjdk8
-      name: tests
-      script: cd $TRAVIS_BUILD_DIR && ./gradlew test
-    - stage: test
-      jdk: openjdk11
-      name: tests (openjdk11)
-      script: cd $TRAVIS_BUILD_DIR && ./gradlew test
-    - stage: test
-      jdk: openjdk8
-      name: default tasks
-      script: cd $TRAVIS_BUILD_DIR && ./gradlew
-    - stage: test
-      jdk: openjdk11
-      name: default tasks (openjdk11)
-      script: cd $TRAVIS_BUILD_DIR && ./gradlew
-    - stage: test
-      jdk: openjdk8
       name: integration tests
       script:
         - cd $TRAVIS_BUILD_DIR && ./gradlew assemble

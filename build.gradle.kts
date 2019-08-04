@@ -46,16 +46,15 @@ dependencies {
 
   implementation("com.typesafe.akka:akka-stream_${Globals.scalaMajorVersion}:${Globals.akkaStreamVersion}")
   implementation("org.scala-lang:scala-library:${Globals.scalaVersion}")
-  implementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
-  implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 
+  implementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
+
+  implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("org.springframework.boot:spring-boot-starter-actuator")
 
   annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
   testAnnotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-
-  runtimeOnly("org.springframework.boot:spring-boot-devtools")
 
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("io.projectreactor:reactor-test")
