@@ -1,0 +1,16 @@
+#version: '3.7'
+version: '2.1'
+networks:
+  app-network:
+    driver: bridge
+services:
+  app:
+    #image: openjdk:8u201-jre-alpine3.9
+    image: openjdk:11.0.3-jdk-slim-stretch
+    #image: openjdk:13-ea-19-jdk-alpine3.9
+    volumes: ['./build/libs:/tmp/app']
+    ports: ['8080:8080']
+    networks: [app-network]
+    command: sh -c 'java -jar /tmp/app/*.jar'
+    healthcheck:
+      disable: true

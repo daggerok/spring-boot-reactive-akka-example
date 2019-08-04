@@ -1,0 +1,24 @@
+{
+  "name": "docs",
+  "version": "1.0.0-SNAPSHOT",
+  "description": "Spring Boot Reactive Akka",
+  "main": "index.js",
+  "scripts": {
+    "start": "vuepress dev",
+    "build": "vuepress build",
+    "gh-pages": "cross-env BASE_HREF='/spring-boot-reactive-akka-example/' npm run build"
+  },
+  "keywords": [
+    "scala",
+    "vuepress",
+    "spring-boot",
+    "gradle-kotlin-dsl"
+  ],
+  "author": "Maksim Kostromin <daggerok@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "12.6.9",
+    "cross-env": "5.2.0",
+    "vuepress": "1.0.3"
+  }
+}

@@ -1,0 +1,158 @@
+env:
+  global:
+    - TERM=dumb
+    - secure: GiBycx982SBwBx6vA0bFjdvYIxqOU3GMRu6fWBfN8fkYVSnfycFRObnXmho0WOXYdrti3bhWOq1aM1Qc3mNFRy3yyMynPUrsQfo8eFqTg7Ch/tUPxEvlcPhBw77y31egsiQQ+SanWJxiQvAfYW5tcbXOVZq4BIwP0QqH02ZkpScPWc2QxEjJnfWkk/AiAdc3pWsU2NTf2Dvqe7YLuw9siG1RmteEj/GKzz8Z7Y8Vw3S41H6ARqMonfIARB/dzbM3PuVU+0A/IFs9PnIPDjdhXxgSkppqxBL6ur+IYLJ5Fy/xCVDfyKq4AU54+e2XFU2PSuS1N0Uskg7YWy8mg89zM1ZocZ+YV0T7R+sGj7IaTtYQ82QQtXW/AMFzclG54PtSFsauznLYt1n7bs7+iDYxewhfMahFwEuB3wYqz3oAa7bEMthSZNtBQVZFZqnCHs8EosIbG4ZkIwrxdUhxivGseKJAqMZSmcweMZTkIFijyMkPC4lZxDVIZZ0kYjELNGTIVx8j+YSKCgdrT/cLArjHHI8P5uDZnWiu2+1mmtq8dqHrFMRHOm9tETic6gbGMa54mFZnxHEqw4nwgsjQyV709JhHQVO/j39sp2tnMz3tOgePpsV1x35BXgbzONI5dNDI6ITCcGx88gnVwQN6jrvdLpy1mugryTaOlBlnTm7+hj8=
+dist: trusty
+notifications:
+  email: false
+git:
+  quiet: true
+  depth: 1
+language: java
+jdk: openjdk8
+node_js: lts/*
+python: 3
+service:
+  - docker
+  - xvfb
+addons:
+  apt:
+    update: true
+    sources:
+      - google-chrome
+    packages:
+      - jq
+      - bash
+      - sudo
+      - lsof
+      - wget
+      - curl
+      - unzip
+      - docker-ce
+      - python3-pip
+      - libappindicator1
+      - fonts-liberation
+      - google-chrome-stable
+install: true
+before_install:
+  ## use instead:
+  ##
+  ## services:
+  ##   - xvfb
+  ##
+  #- export CHROME_BIN=/usr/bin/google-chrome
+  #- export DISPLAY=:99.0
+  #- sh -e /etc/init.d/xvfb start
+  ##
+  - export PATH=$HOME/.local/bin:$PATH
+  - pip3 install --user $(whoami) --upgrade pip
+  - pip install --user $(whoami) --upgrade httpie
+  - http --version --debug
+  - docker-compose -v
+  #
+  - source <(curl -s https://raw.githubusercontent.com/daggerok/bash-functions/master/main.bash)
+  - stop_any 80 8001 8002 8080 5432
+stages:
+  - test
+#  - deploy
+jobs:
+  include:
+    - stage: test
+      jdk: openjdk8
+      name: tests
+      script: cd $TRAVIS_BUILD_DIR && ./gradlew test
+    - stage: test
+      jdk: openjdk11
+      name: tests (openjdk11)
+      script: cd $TRAVIS_BUILD_DIR && ./gradlew test
+    - stage: test
+      jdk: openjdk8
+      name: default tasks
+      script: cd $TRAVIS_BUILD_DIR && ./gradlew
+    - stage: test
+      jdk: openjdk11
+      name: default tasks (openjdk11)
+      script: cd $TRAVIS_BUILD_DIR && ./gradlew
+    - stage: test
+      jdk: openjdk8
+      name: integration tests
+      script:
+        - cd $TRAVIS_BUILD_DIR && ./gradlew assemble
+        - java -jar $TRAVIS_BUILD_DIR/build/libs/*.jar &
+        - wait_for 8080
+        - http :8080 | jq '.'
+        - http :8080/tweets | jq '.'
+        - http :8080/tweets body="hello mvc" | jq '.'
+        - http :8080/tweets/tags | jq '.'
+        - stop_any 80 8080
+    - stage: test
+      jdk: openjdk11
+      name: integration tests (openjdk11)
+      script:
+        - cd $TRAVIS_BUILD_DIR && ./gradlew assemble
+        - java -jar $TRAVIS_BUILD_DIR/build/libs/*.jar &
+        - wait_for 8080
+        - http :8080 | jq '.'
+        - http :8080/tweets | jq '.'
+        - http :8080/tweets body="hello mvc" | jq '.'
+        - http :8080/tweets/tags | jq '.'
+        - stop_any 80 8080
+    - stage: test
+      jdk: openjdk8
+      name: integration tests with docker-compose
+      script:
+        - cd $TRAVIS_BUILD_DIR && ./gradlew assemble composeUp
+        - wait_for 8080
+        - http :8080 | jq '.'
+        - http :8080/tweets | jq '.'
+        - http :8080/tweets body="hello mvc" | jq '.'
+        - http :8080/tweets/tags | jq '.'
+        - cd $TRAVIS_BUILD_DIR && ./gradlew composeDown
+        - stop_any 80 8080
+    - stage: test
+      jdk: openjdk11
+      name: integration tests with docker-compose (openjdk11)
+      script:
+        - cd $TRAVIS_BUILD_DIR && ./gradlew assemble composeUp
+        - wait_for 8080
+        - http :8080 | jq '.'
+        - http :8080/tweets | jq '.'
+        - http :8080/tweets body="hello mvc" | jq '.'
+        - http :8080/tweets/tags | jq '.'
+        - cd $TRAVIS_BUILD_DIR && ./gradlew composeDown
+        - stop_any 80 8080
+    - stage: test
+      jdk: openjdk8
+      name: gradle dependencyUpdates
+      script: cd $TRAVIS_BUILD_DIR && ./gradlew dependencyUpdates
+    - stage: test
+      jdk: openjdk11
+      name: gradle dependencyUpdates (openjdk11)
+      script: cd $TRAVIS_BUILD_DIR && ./gradlew dependencyUpdates
+    - stage: deploy
+      #jdk: openjdk8
+      jdk: openjdk11
+      name: GitHub release and GitHub pages deployment (openjdk11)
+      script: skip
+      if: branch = "master" AND type NOT IN (pull_request)
+      before_deploy:
+        - if [ "$TRAVIS_PULL_REQUEST" != "false" ] || [ ".$TRAVIS_BRANCH" != ".master" ] ; then exit 0 ; fi
+        - env
+        # documentation
+        - cd $TRAVIS_BUILD_DIR && ./gradlew npm_run_gh-pages
+      deploy: &pages
+        provider: pages
+        skip-cleanup: true
+        github-token: "$GITHUB_TOKEN"
+        keep-history: true
+        local-dir: .vuepress/dist
+        target_branch: gh-pages
+        on:
+          branch: master
+          condition: "$TRAVIS_PULL_REQUEST = false"
+cache:
+  directories:
+    - ~/.docker
+    - ~/.gradle
+  packages: true
+  pip: true
