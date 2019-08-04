@@ -1,7 +1,7 @@
 env:
   global:
     - TERM=dumb
-    - secure: GiBycx982SBwBx6vA0bFjdvYIxqOU3GMRu6fWBfN8fkYVSnfycFRObnXmho0WOXYdrti3bhWOq1aM1Qc3mNFRy3yyMynPUrsQfo8eFqTg7Ch/tUPxEvlcPhBw77y31egsiQQ+SanWJxiQvAfYW5tcbXOVZq4BIwP0QqH02ZkpScPWc2QxEjJnfWkk/AiAdc3pWsU2NTf2Dvqe7YLuw9siG1RmteEj/GKzz8Z7Y8Vw3S41H6ARqMonfIARB/dzbM3PuVU+0A/IFs9PnIPDjdhXxgSkppqxBL6ur+IYLJ5Fy/xCVDfyKq4AU54+e2XFU2PSuS1N0Uskg7YWy8mg89zM1ZocZ+YV0T7R+sGj7IaTtYQ82QQtXW/AMFzclG54PtSFsauznLYt1n7bs7+iDYxewhfMahFwEuB3wYqz3oAa7bEMthSZNtBQVZFZqnCHs8EosIbG4ZkIwrxdUhxivGseKJAqMZSmcweMZTkIFijyMkPC4lZxDVIZZ0kYjELNGTIVx8j+YSKCgdrT/cLArjHHI8P5uDZnWiu2+1mmtq8dqHrFMRHOm9tETic6gbGMa54mFZnxHEqw4nwgsjQyV709JhHQVO/j39sp2tnMz3tOgePpsV1x35BXgbzONI5dNDI6ITCcGx88gnVwQN6jrvdLpy1mugryTaOlBlnTm7+hj8=
+    - secure: hEB/oRcqBtM9XAtI3X77TzA+h0h6/W6bG2b4Zb1ypwukAnKZg6ziuKKFHU06uM3r710GY8kNSP/xMq4hoaQjQstml2RUDudH3Bo6n33BbOcotQr/YnTYBQPyvJpE7aVyEpDDnmaygJfw667HSgr9tfcmLwkgOH8aeYF4MUhuL77xJJm683/K3IO8KRfDRxlFMFuYwI4f7yoVZxxDFYDcUA6aqDzZCYCwVSQ+71GtVTtoe+g+asHUM+GgoNq8rlpw55Wqzy37dxwt4eyMCSIVbzbXrs+iCbg9UTJK8qvl2ahfEC1ECj7Iuus/ff8iLw14cgmLF6Z7lSB9390+Iq1AS2bpVy4zykgZAIn+qPPZyCkqBlZZBpiVPq1QsqqTlRYonuSytJNYbSVXmdaK0DJLg0DdRzYV8nohvD/HvTErYhhjIO6vDKv8piZ2aAboRhzTVUNVFvFMoaQ5667gR9NWvpECXNgqPRVBprjqAZD7Cfljzpv4rZi+ppkE4dAEpQcURRgVOtVTi62NtL9TnqPqdxf/zmB7eDMYMwN1iEij18ZjlRp8m3xP4Dqo2EdOtKPBu+Iia6AVEARRljyxPV6WSm0DB0t3HSvL6sVUkPibYwfuCVv0CuIzw7wsqUE/8V6bcHT72uSqmVEXIOESb13eAkGrBrrDNE9HY4g7PUrXnEA=
 dist: trusty
 notifications:
   email: false
@@ -54,7 +54,7 @@ before_install:
   - stop_any 80 8001 8002 8080 5432
 stages:
   - test
-#  - deploy
+  - deploy
 jobs:
   include:
     - stage: test
@@ -154,5 +154,6 @@ cache:
   directories:
     - ~/.docker
     - ~/.gradle
+    - ~/.embedmongo/
   packages: true
   pip: true
